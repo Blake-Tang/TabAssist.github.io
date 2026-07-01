@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tab Assist — Save, restore and color your Unreal Engine tabs</title>
+<meta name="description" content="Tab Assist is an Unreal Engine editor plugin that lets you save asset editor tabs, reopen closed tabs with Ctrl+Shift+T, and color-code your workspace.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#17181C;
+    --panel:#1F2025;
+    --panel-2:#26272D;
+    --line:#33343B;
+    --line-soft:#2B2C32;
+    --text:#DCDDE1;
+    --muted:#94969E;
+    --tab-orange:#E8873B;
+    --tab-cyan:#3FBCE0;
+    --tab-green:#7CC554;
+    --tab-magenta:#C85B9B;
+    --tab-yellow:#D9B23C;
+    --display:"Chakra Petch",sans-serif;
+    --body:"IBM Plex Sans",sans-serif;
+    --mono:"IBM Plex Mono",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--tab-cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--tab-cyan);outline-offset:2px;border-radius:2px}
+  kbd{
+    font-family:var(--mono);
+    font-size:.82em;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-bottom-width:2px;
+    border-radius:4px;
+    padding:2px 7px;
+    white-space:nowrap;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+
+  /* ============ TOP NAV (styled like an editor menu bar) ============ */
+  header.menubar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(23,24,28,.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .menubar-inner{
+    max-width:1040px;margin:0 auto;padding:0 24px;
+    display:flex;align-items:center;gap:22px;height:48px;
+  }
+  .logo{
+    font-family:var(--display);font-weight:700;font-size:15px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--text);
+    display:flex;align-items:center;gap:9px;
+  }
+  .logo:hover{text-decoration:none}
+  .logo .pin{
+    width:10px;height:10px;border-radius:2px;
+    background:linear-gradient(135deg,var(--tab-orange),var(--tab-magenta));
+    flex:none;
+  }
+  nav.mainnav{display:flex;gap:4px;margin-left:auto}
+  nav.mainnav a{
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);
+    padding:5px 10px;border-radius:4px;
+  }
+  nav.mainnav a:hover{color:var(--text);background:var(--panel-2);text-decoration:none}
+  @media (max-width:640px){ nav.mainnav a:nth-child(n+4){display:none} }
+
+  /* ============ HERO ============ */
+  .hero{padding:72px 0 56px;border-bottom:1px solid var(--line-soft)}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--tab-orange);margin-bottom:16px;
+  }
+  h1{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(30px,5vw,50px);line-height:1.12;
+    letter-spacing:-.01em;max-width:19ch;margin-bottom:20px;
+  }
+  h1 .hl{color:var(--tab-orange)}
+  .hero p.lede{max-width:56ch;color:var(--muted);font-size:17.5px;margin-bottom:30px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn{
+    display:inline-block;font-family:var(--display);font-weight:600;
+    font-size:14px;letter-spacing:.05em;text-transform:uppercase;
+    padding:11px 22px;border-radius:5px;border:1px solid transparent;
+  }
+  .btn:hover{text-decoration:none}
+  .btn-primary{background:var(--tab-orange);color:#1A1206}
+  .btn-primary:hover{background:#F2984F}
+  .btn-ghost{border-color:var(--line);color:var(--text)}
+  .btn-ghost:hover{background:var(--panel-2)}
+  .hero-note{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+
+  /* Mock editor tab strip in hero — this is the visual thesis of the page */
+  .mock-strip{
+    margin-top:52px;background:var(--panel);
+    border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  }
+  .mock-strip .strip-bar{
+    display:flex;align-items:flex-end;gap:2px;
+    padding:10px 10px 0;background:var(--panel-2);
+    border-bottom:1px solid var(--line);overflow-x:auto;
+  }
+  .mock-tab{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    background:var(--panel);border:1px solid var(--line);border-bottom:none;
+    border-radius:6px 6px 0 0;padding:7px 14px 8px;
+    display:flex;align-items:center;gap:10px;white-space:nowrap;
+    position:relative;flex:none;
+  }
+  .mock-tab::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:3px;
+    border-radius:6px 6px 0 0;background:var(--tabc,transparent);
+  }
+  .mock-tab.active{color:var(--text);background:var(--bg)}
+  .mock-tab .x{color:var(--muted);font-size:11px}
+  .mock-body{padding:20px 22px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .mock-body .saved{color:var(--tab-green)}
+
+  /* ============ SECTIONS AS DOCK TABS (signature element) ============
+     Every section header is rendered as a docked editor tab with a
+     colored top stripe — mirroring the plugin's tab-color feature.   */
+  section{padding:64px 0 8px}
+  .docktab{
+    display:inline-flex;align-items:center;gap:12px;
+    background:var(--panel);border:1px solid var(--line);border-bottom:none;
+    border-radius:8px 8px 0 0;padding:10px 20px 11px;
+    position:relative;margin-bottom:-1px;
+  }
+  .docktab::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:3px;
+    border-radius:8px 8px 0 0;background:var(--secc,var(--tab-orange));
+  }
+  .docktab h2{
+    font-family:var(--display);font-weight:600;font-size:19px;
+    letter-spacing:.02em;
+  }
+  .docktab .tag{
+    font-family:var(--mono);font-size:11px;color:var(--muted);
+    letter-spacing:.08em;text-transform:uppercase;
+  }
+  .dockbody{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:0 8px 8px 8px;padding:34px 34px 38px;
+  }
+  @media (max-width:640px){ .dockbody{padding:24px 18px 28px} }
+
+  .dockbody p{color:var(--muted);max-width:66ch;margin-bottom:16px}
+  .dockbody p strong{color:var(--text);font-weight:600}
+  .dockbody h3{
+    font-family:var(--display);font-weight:600;font-size:16px;
+    color:var(--text);margin:26px 0 10px;
+  }
+
+  /* ============ STEPS ============ */
+  .step{
+    display:grid;grid-template-columns:52px 1fr;gap:0 20px;
+    padding:26px 0;border-top:1px solid var(--line-soft);
+  }
+  .step:first-of-type{border-top:none;padding-top:8px}
+  .step-num{
+    font-family:var(--display);font-weight:700;font-size:24px;
+    color:var(--secc,var(--tab-orange));line-height:1.2;
+  }
+  .step h3{margin:0 0 8px;font-size:17px}
+  .step p{margin-bottom:14px}
+  .step .media{grid-column:2}
+  @media (max-width:560px){
+    .step{grid-template-columns:1fr}
+    .step .media{grid-column:1}
+  }
+
+  /* ============ MEDIA PLACEHOLDERS ============
+     Replace each placeholder by swapping the <img> src (or dropping a
+     <video>/<img> for your GIF) and deleting the .placeholder overlay. */
+  .media{
+    background:var(--bg);border:1px dashed var(--line);
+    border-radius:6px;overflow:hidden;margin-top:6px;
+  }
+  .media img,.media video{display:block;width:100%;height:auto}
+  .media .placeholder{
+    aspect-ratio:16/9;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:8px;
+    color:var(--muted);text-align:center;padding:20px;
+  }
+  .media .placeholder .ph-label{
+    font-family:var(--mono);font-size:12.5px;color:var(--text);
+  }
+  .media .placeholder .ph-hint{
+    font-family:var(--mono);font-size:11.5px;opacity:.65;
+  }
+  .media figcaption{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    padding:9px 14px;border-top:1px solid var(--line-soft);
+  }
+
+  /* ============ FEATURE GRID ============ */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
+  .card{
+    background:var(--bg);border:1px solid var(--line-soft);
+    border-radius:6px;padding:20px 20px 22px;position:relative;overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:var(--cardc,var(--tab-cyan));
+  }
+  .card h3{margin:0 0 8px;font-size:15px}
+  .card p{font-size:14.5px;margin:0}
+
+  /* ============ SETTINGS TABLE ============ */
+  table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:6px}
+  th{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);text-align:left;
+    padding:10px 14px;border-bottom:1px solid var(--line);
+  }
+  td{padding:12px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;color:var(--muted)}
+  td:first-child{color:var(--text);font-weight:500;white-space:nowrap}
+  @media (max-width:640px){ td:first-child{white-space:normal} }
+
+  /* ============ FOOTER ============ */
+  footer{
+    margin-top:80px;border-top:1px solid var(--line-soft);
+    padding:34px 0 46px;
+  }
+  footer .wrap{
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header class="menubar">
+  <div class="menubar-inner">
+    <a class="logo" href="#top"><span class="pin" aria-hidden="true"></span>Tab Assist</a>
+    <nav class="mainnav" aria-label="Site">
+      <a href="#save-tabs">Save Tabs</a>
+      <a href="#features">Features</a>
+      <a href="#settings">Settings</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Unreal Engine Editor Plugin</p>
+      <h1>Your tabs, <span class="hl">saved</span>. Every session.</h1>
+      <p class="lede">Tab Assist remembers the asset editor tabs you work in — save them, reopen them in one click, bring back closed tabs with a shortcut, and color-code them so you never lose your place in a big project.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#save-tabs">How to save tabs</a>
+        <a class="btn btn-ghost" href="#install">Get the plugin</a>
+        <span class="hero-note">UE5 · Editor plugin</span>
+      </div>
+
+      <!-- Mock tab strip: swap for a real screenshot/GIF of your editor if you prefer -->
+      <div class="mock-strip" role="img" aria-label="Illustration of colored, saved editor tabs in Unreal Engine">
+        <div class="strip-bar">
+          <div class="mock-tab active" style="--tabc:var(--tab-orange)">BP_PlayerCharacter <span class="x">✕</span></div>
+          <div class="mock-tab" style="--tabc:var(--tab-cyan)">WBP_MainHUD <span class="x">✕</span></div>
+          <div class="mock-tab" style="--tabc:var(--tab-green)">M_Environment <span class="x">✕</span></div>
+          <div class="mock-tab" style="--tabc:var(--tab-magenta)">ABP_Enemy <span class="x">✕</span></div>
+          <div class="mock-tab">NS_Explosion <span class="x">✕</span></div>
+        </div>
+        <div class="mock-body">
+          <span class="saved">✓ 4 tabs saved</span> — restored automatically next time you open the editor. Reopen a closed tab any time with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SAVE TABS (main tutorial) ================= -->
+  <section id="save-tabs" style="--secc:var(--tab-orange)">
+    <div class="wrap">
+      <div class="docktab"><h2>How to Save Tabs</h2><span class="tag">Core workflow</span></div>
+      <div class="dockbody">
+        <p>Saving a tab tells Tab Assist to remember that asset. Saved tabs live in your project's per-user settings, survive editor restarts, and can be reopened individually or all at once. There are two ways to save: <strong>per tab</strong> or <strong>everything at once</strong>.</p>
+
+        <div class="step" style="--secc:var(--tab-orange)">
+          <div class="step-num" aria-hidden="true">1</div>
+          <div>
+            <h3>Open the assets you work with</h3>
+            <p>Open any asset editors as usual — Blueprints, Materials, Widgets, Animation Blueprints. Each one appears as a tab in the main editor window.</p>
+          </div>
+          <figure class="media">
+            <!-- REPLACE: set src to your image/GIF, then delete the .placeholder div -->
+            <div class="placeholder">
+              <span class="ph-label">[ GIF / screenshot slot ]</span>
+              <span class="ph-hint">Opening a few asset editors → tabs appearing in the main window</span>
+            </div>
+            <figcaption>Asset editors open as tabs in the main editor window.</figcaption>
+          </figure>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-orange)">
+          <div class="step-num" aria-hidden="true">2</div>
+          <div>
+            <h3>Right-click the tab → Add to Saved Tabs</h3>
+            <p>Right-click any open tab. Tab Assist extends the tab's context menu with a save option — click it and that asset is added to your saved list. The same menu lets you <strong>remove</strong> a tab from the saved list later.</p>
+          </div>
+          <figure class="media">
+            <div class="placeholder">
+              <span class="ph-label">[ GIF slot — most important one ]</span>
+              <span class="ph-hint">Right-clicking a tab and choosing the save option from the context menu</span>
+            </div>
+            <figcaption>The tab's right-click menu is extended with save / remove actions.</figcaption>
+          </figure>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-orange)">
+          <div class="step-num" aria-hidden="true">3</div>
+          <div>
+            <h3>Or save every open tab at once</h3>
+            <p>Setting up a work session? Use <strong>Save All Opened Tabs</strong> from the Tab Assist menu in the editor's menu bar to store everything that's currently open in one action.</p>
+          </div>
+          <figure class="media">
+            <div class="placeholder">
+              <span class="ph-label">[ GIF / screenshot slot ]</span>
+              <span class="ph-hint">Tab Assist pull-down menu → Save All Opened Tabs</span>
+            </div>
+            <figcaption>One click stores every currently open asset editor tab.</figcaption>
+          </figure>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-orange)">
+          <div class="step-num" aria-hidden="true">4</div>
+          <div>
+            <h3>Reopen saved tabs any time</h3>
+            <p>Your saved tabs are listed in the Tab Assist menu — click one to reopen just that asset, or open <strong>all stored tabs</strong> in a single action. With restore enabled in the settings, saved tabs come back automatically when the editor starts.</p>
+          </div>
+          <figure class="media">
+            <div class="placeholder">
+              <span class="ph-label">[ GIF / screenshot slot ]</span>
+              <span class="ph-hint">Opening saved tabs from the menu / tabs restoring on editor start</span>
+            </div>
+            <figcaption>Saved tabs reopen individually, all at once, or automatically on startup.</figcaption>
+          </figure>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTROL MENU ================= -->
+  <section id="control-menu" style="--secc:var(--tab-cyan)">
+    <div class="wrap">
+      <div class="docktab"><h2>The Control Menu</h2><span class="tag">Manage saved tabs</span></div>
+      <div class="dockbody">
+        <p>The Control Menu is Tab Assist's home panel — a dockable tab that lists every saved asset. From here you can <strong>open</strong> or <strong>close</strong> a saved tab, <strong>delete</strong> it from the saved list, and <strong>drag &amp; drop</strong> entries to reorder them the way you think about your project.</p>
+        <figure class="media">
+          <div class="placeholder">
+            <span class="ph-label">[ GIF slot ]</span>
+            <span class="ph-hint">Control Menu open — dragging entries to reorder, open/close/delete buttons</span>
+          </div>
+          <figcaption>Drag entries to reorder. Open, close or remove any saved tab from one panel.</figcaption>
+        </figure>
+        <p style="margin-top:16px">If you rename or delete an asset in the Content Browser, Tab Assist keeps the saved list in sync automatically — no dead entries.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section id="features" style="--secc:var(--tab-green)">
+    <div class="wrap">
+      <div class="docktab"><h2>Everything Else It Does</h2><span class="tag">Feature overview</span></div>
+      <div class="dockbody">
+        <div class="grid">
+          <div class="card" style="--cardc:var(--tab-cyan)">
+            <h3>Reopen closed tabs</h3>
+            <p>Closed something by accident? <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> brings back the most recently closed tab — just like a browser. Rebindable in the settings.</p>
+          </div>
+          <div class="card" style="--cardc:var(--tab-magenta)">
+            <h3>Tab colors</h3>
+            <p>Assign a color to any tab. Colors are saved per asset and reapplied every time the tab opens, so UI, gameplay and art assets stay visually separated.</p>
+          </div>
+          <div class="card" style="--cardc:var(--tab-yellow)">
+            <h3>Selected-tab border</h3>
+            <p>An optional border style highlights the tab you're currently in, using its assigned color — easy to spot in a crowded tab strip.</p>
+          </div>
+          <div class="card" style="--cardc:var(--tab-orange)">
+            <h3>Close all tabs</h3>
+            <p>Clear the whole tab strip in one command when you want a clean slate. Your saved tabs stay saved.</p>
+          </div>
+          <div class="card" style="--cardc:var(--tab-green)">
+            <h3>Content Browser integration</h3>
+            <p>Right-click assets in the Content Browser to access Tab Assist actions without opening them first.</p>
+          </div>
+          <div class="card" style="--cardc:var(--tab-cyan)">
+            <h3>Tabs locked to the main window</h3>
+            <p>Optionally force new asset editors to open as tabs in the main window instead of separate floating windows (UE 5.2+).</p>
+          </div>
+        </div>
+
+        <h3 style="margin-top:34px">Tab colors in action</h3>
+        <figure class="media">
+          <div class="placeholder">
+            <span class="ph-label">[ GIF slot ]</span>
+            <span class="ph-hint">Assigning a color to a tab and seeing it persist after reopening</span>
+          </div>
+          <figcaption>Colors persist per asset — close and reopen, the color comes back.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section id="settings" style="--secc:var(--tab-magenta)">
+    <div class="wrap">
+      <div class="docktab"><h2>Settings</h2><span class="tag">Editor Preferences</span></div>
+      <div class="dockbody">
+        <p>Tab Assist's options live in the editor settings and are stored per project, per user.</p>
+        <table>
+          <thead><tr><th>Setting</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Force Lock Tab In Main Window</td>
+              <td>Keeps new asset editors docked as tabs in the main window. Turn off if you use a custom asset editor open location. UE 5.2 and later only.</td>
+            </tr>
+            <tr>
+              <td>Restore Tab Behavior</td>
+              <td>Choose what comes back on editor start: nothing, only saved tabs, or saved tabs plus whatever was left open.</td>
+            </tr>
+            <tr>
+              <td>Selected Tab Style Type</td>
+              <td><strong>Bordered</strong> outlines the active tab with its assigned color for a more defined look; <strong>None</strong> disables it.</td>
+            </tr>
+            <tr>
+              <td>Reopen Closed Tabs Shortcut</td>
+              <td>Rebind the reopen shortcut. Default is <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>. Not all key combinations are accepted — reset to T for the default.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INSTALL ================= -->
+  <section id="install" style="--secc:var(--tab-yellow)">
+    <div class="wrap">
+      <div class="docktab"><h2>Install &amp; Enable</h2><span class="tag">Getting started</span></div>
+      <div class="dockbody">
+        <div class="step" style="--secc:var(--tab-yellow)">
+          <div class="step-num" aria-hidden="true">1</div>
+          <div>
+            <h3>Add Tab Assist to your project</h3>
+            <p>Install from Fab / the marketplace, or drop the plugin folder into your project's <span style="font-family:var(--mono);font-size:.9em">Plugins/</span> directory.
+            <!-- TODO: replace with your real marketplace link -->
+            <a href="#">Marketplace link goes here</a>.</p>
+          </div>
+        </div>
+        <div class="step" style="--secc:var(--tab-yellow)">
+          <div class="step-num" aria-hidden="true">2</div>
+          <div>
+            <h3>Enable the plugin</h3>
+            <p>In the editor, open <strong>Edit → Plugins</strong>, search for <strong>Tab Assist</strong>, tick the checkbox and restart the editor.</p>
+          </div>
+        </div>
+        <div class="step" style="--secc:var(--tab-yellow)">
+          <div class="step-num" aria-hidden="true">3</div>
+          <div>
+            <h3>Start saving tabs</h3>
+            <p>The Tab Assist menu appears in the editor's menu bar. Open your usual assets, right-click a tab, save it — done. <a href="#save-tabs">Jump back to the walkthrough ↑</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Tab Assist — © 2024 blakeT. All rights reserved.</span>
+    <span>Built for Unreal Engine 5</span>
+  </div>
+</footer>
+
+</body>
+</html>
