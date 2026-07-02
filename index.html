@@ -340,20 +340,46 @@
     </div>
   </section>
 
-  <!-- ================= CONTROL MENU ================= -->
-  <section id="control-menu" style="--secc:var(--tab-cyan)">
+  <!-- ================= RESTORE ON STARTUP ================= -->
+  <section id="auto-restore" style="--secc:var(--tab-cyan)">
     <div class="wrap">
-      <div class="docktab"><h2>The Control Menu</h2><span class="tag">Manage saved tabs</span></div>
+      <div class="docktab"><h2>Restore on Editor Start</h2><span class="tag">Automatic</span></div>
       <div class="dockbody">
-        <p>The Control Menu is Tab Assist's home panel — a dockable tab that lists every saved asset. From here you can <strong>open</strong> or <strong>close</strong> a saved tab, <strong>delete</strong> it from the saved list, and <strong>drag &amp; drop</strong> entries to reorder them the way you think about your project.</p>
-        <figure class="media">
-          <div class="placeholder">
-            <span class="ph-label">[ GIF slot ]</span>
-            <span class="ph-hint">Control Menu open — dragging entries to reorder, open/close/delete buttons</span>
+        <p>Once a tab is saved, you never have to reopen it by hand again. When the Unreal editor launches, Tab Assist reads your saved list and <strong>reopens every saved tab automatically</strong> — your workspace is back exactly where you left it, before you've even touched the Content Browser.</p>
+
+        <div class="step" style="--secc:var(--tab-cyan)">
+          <div class="step-num" aria-hidden="true">1</div>
+          <div>
+            <h3>Save the tabs you work in</h3>
+            <p>Right-click a tab and add it to your saved tabs, or use <strong>Save All Opened Tabs</strong> to store your whole session. <a href="#save-tabs">See the saving walkthrough ↑</a></p>
           </div>
-          <figcaption>Drag entries to reorder. Open, close or remove any saved tab from one panel.</figcaption>
-        </figure>
-        <p style="margin-top:16px">If you rename or delete an asset in the Content Browser, Tab Assist keeps the saved list in sync automatically — no dead entries.</p>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-cyan)">
+          <div class="step-num" aria-hidden="true">2</div>
+          <div>
+            <h3>Close the editor like normal</h3>
+            <p>No extra step on shutdown. Saved tabs live in your project's per-user settings, so they survive editor restarts, crashes and machine reboots.</p>
+          </div>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-cyan)">
+          <div class="step-num" aria-hidden="true">3</div>
+          <div>
+            <h3>Launch — your tabs are already open</h3>
+            <p>On startup, Tab Assist reopens each saved asset editor as a tab in the main window. Assigned tab colors are reapplied at the same time, so the strip looks identical to your last session.</p>
+            <figure class="media">
+              <div class="placeholder">
+                <span class="ph-label">[ GIF slot ]</span>
+                <span class="ph-hint">Editor launching — saved tabs reopening automatically, colors reapplied</span>
+              </div>
+              <figcaption>Editor start: saved tabs reopen on their own, colors included.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <h3 style="margin-top:30px">Choose what comes back</h3>
+        <p>The <strong>Restore Tab Behavior</strong> setting in Editor Preferences controls startup restore: <strong>Restore Only Saved Tabs</strong> (the default) reopens just your saved list, <strong>Restore Saved Tabs and Left Open Tabs</strong> also brings back whatever was open when you closed the editor, and <strong>Never Restore</strong> turns startup restore off entirely.</p>
       </div>
     </div>
   </section>
@@ -391,11 +417,8 @@
         </div>
 
         <h3 style="margin-top:34px">Tab colors in action</h3>
-        <figure class="media">
-          <div class="placeholder">
-            <span class="ph-label">[ GIF slot ]</span>
-            <span class="ph-hint">Assigning a color to a tab and seeing it persist after reopening</span>
-          </div>
+         <figure class="media">
+             <img src="images/ColorTab_GIF.gif" alt="">
           <figcaption>Colors persist per asset — close and reopen, the color comes back.</figcaption>
         </figure>
       </div>
