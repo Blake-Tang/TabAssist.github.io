@@ -237,6 +237,11 @@
     padding:10px 16px 10px 20px;border-bottom:1px solid var(--line-soft);
     font-family:var(--mono);font-size:13px;color:var(--text);
     position:relative;
+    cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  }
+  .ctrlrow.dragging{
+    cursor:grabbing;background:var(--panel-2);
+    outline:1px dashed var(--tab-magenta);outline-offset:-1px;
   }
   .ctrlrow::before{
     content:"";position:absolute;left:8px;top:8px;bottom:8px;width:4px;
@@ -430,8 +435,8 @@
       <div class="dockbody">
         <p>The Control Menu is Tab Assist's home base — one dockable panel that lists <strong>every saved tab</strong> in your project. From here you can reorder tabs, edit their colors, and open or close them without hunting through the Content Browser.</p>
 
-        <!-- Mock control menu: mirrors the plugin's saved-tab list -->
-        <div class="ctrlmenu" role="img" aria-label="Illustration of the Tab Assist Control Menu listing saved tabs with color markers and Open, Close, Edit Color and delete actions">
+        <!-- Mock control menu: interactive — drag rows to reorder -->
+        <div class="ctrlmenu" aria-label="Interactive demo of the Tab Assist Control Menu — drag rows to reorder saved tabs">
           <div class="ctrlmenu-title">Your Tabs</div>
           <div class="ctrlrow" style="--swc:var(--tab-magenta)">
             <span class="ctrlname">SK_Mannequin_Arms_PhysicsAsset</span>
@@ -453,7 +458,7 @@
             <span class="ctrlname">SK_Mannequin_Arms_Skeleton</span>
             <span class="ctrlactions"><span class="ctrlbtn">Open</span><span class="ctrlbtn">Close</span><span class="ctrlbtn">Edit Color</span><span class="ctrlbtn del">🗑</span></span>
           </div>
-          <div class="ctrlmenu-foot">White marker = default (no color assigned) · Drag rows to reorder</div>
+          <div class="ctrlmenu-foot">Try it — grab a row and drag to reorder · White marker = default (no color assigned)</div>
         </div>
 
         <div class="step" style="--secc:var(--tab-magenta)">
@@ -588,5 +593,42 @@
   </div>
 </footer>
 
+<script>
+/* Control Menu demo: drag rows to reorder (mouse + touch via pointer events) */
+(function(){
+  var menu = document.querySelector('.ctrlmenu');
+  if(!menu) return;
+  var dragRow = null;
+
+  menu.addEventListener('pointerdown', function(e){
+    var row = e.target.closest('.ctrlrow');
+    if(!row || e.target.closest('.ctrlbtn')) return;
+    dragRow = row;
+    row.classList.add('dragging');
+    row.setPointerCapture(e.pointerId);
+  });
+
+  menu.addEventListener('pointermove', function(e){
+    if(!dragRow) return;
+    e.preventDefault();
+    var over = document.elementFromPoint(e.clientX, e.clientY);
+    var target = over && over.closest ? over.closest('.ctrlrow') : null;
+    if(target && target !== dragRow && target.parentNode === dragRow.parentNode){
+      var r = target.getBoundingClientRect();
+      var before = e.clientY < r.top + r.height / 2;
+      target.parentNode.insertBefore(dragRow, before ? target : target.nextSibling);
+    }
+  });
+
+  function endDrag(){
+    if(dragRow){
+      dragRow.classList.remove('dragging');
+      dragRow = null;
+    }
+  }
+  menu.addEventListener('pointerup', endDrag);
+  menu.addEventListener('pointercancel', endDrag);
+})();
+</script>
 </body>
 </html>
