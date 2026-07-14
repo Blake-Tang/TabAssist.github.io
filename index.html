@@ -221,6 +221,40 @@
     padding:9px 14px;border-top:1px solid var(--line-soft);
   }
 
+  /* ============ MOCK CONTROL MENU ============ */
+  .ctrlmenu{
+    background:var(--bg);border:1px solid var(--line);
+    border-radius:8px;overflow:hidden;margin:6px 0 10px;
+  }
+  .ctrlmenu-title{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    letter-spacing:.08em;text-transform:uppercase;
+    padding:9px 16px;background:var(--panel-2);
+    border-bottom:1px solid var(--line);
+  }
+  .ctrlrow{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 16px 10px 20px;border-bottom:1px solid var(--line-soft);
+    font-family:var(--mono);font-size:13px;color:var(--text);
+    position:relative;
+  }
+  .ctrlrow::before{
+    content:"";position:absolute;left:8px;top:8px;bottom:8px;width:4px;
+    border-radius:2px;background:var(--swc,#FFFFFF);
+  }
+  .ctrlrow .ctrlname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ctrlrow .ctrlactions{margin-left:auto;display:flex;gap:6px;flex:none}
+  .ctrlbtn{
+    font-family:var(--mono);font-size:11px;color:var(--muted);
+    border:1px solid var(--line);border-radius:4px;padding:2px 8px;
+  }
+  .ctrlbtn.del{color:#D07070}
+  @media (max-width:560px){ .ctrlrow .ctrlactions .ctrlbtn:nth-child(-n+2){display:none} }
+  .ctrlmenu-foot{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    padding:9px 16px;
+  }
+
   /* ============ FEATURE GRID ============ */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
   .card{
@@ -263,6 +297,7 @@
     <a class="logo" href="#top"><span class="pin" aria-hidden="true"></span>Tab Assist</a>
     <nav class="mainnav" aria-label="Site">
       <a href="#save-tabs">Save Tabs</a>
+      <a href="#control-menu">Control Menu</a>
       <a href="#features">Features</a>
       <a href="#settings">Settings</a>
       <a href="#install">Install</a>
@@ -384,6 +419,59 @@
 
         <h3 style="margin-top:30px">Choose what comes back</h3>
         <p>The <strong>Restore Tab Behavior</strong> setting in Editor Preferences controls startup restore: <strong>Restore Only Saved Tabs</strong> (the default) reopens just your saved list, <strong>Restore Saved Tabs and Left Open Tabs</strong> also brings back whatever was open when you closed the editor, and <strong>Never Restore</strong> turns startup restore off entirely.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTROL MENU ================= -->
+  <section id="control-menu" style="--secc:var(--tab-magenta)">
+    <div class="wrap">
+      <div class="docktab"><h2>The Tab Control Menu</h2><span class="tag">Manage saved tabs</span></div>
+      <div class="dockbody">
+        <p>The Control Menu is Tab Assist's home base — one dockable panel that lists <strong>every saved tab</strong> in your project. From here you can reorder tabs, edit their colors, and open or close them without hunting through the Content Browser.</p>
+
+        <!-- Mock control menu: mirrors the plugin's saved-tab list -->
+        <div class="ctrlmenu" role="img" aria-label="Illustration of the Tab Assist Control Menu listing saved tabs with color markers and Open, Close, Edit Color and delete actions">
+          <div class="ctrlmenu-title">Your Tabs</div>
+          <div class="ctrlrow" style="--swc:var(--tab-magenta)">
+            <span class="ctrlname">SK_Mannequin_Arms_PhysicsAsset</span>
+            <span class="ctrlactions"><span class="ctrlbtn">Open</span><span class="ctrlbtn">Close</span><span class="ctrlbtn">Edit Color</span><span class="ctrlbtn del">🗑</span></span>
+          </div>
+          <div class="ctrlrow" style="--swc:#FFFFFF">
+            <span class="ctrlname">ML_SoftMetal_UE4</span>
+            <span class="ctrlactions"><span class="ctrlbtn">Open</span><span class="ctrlbtn">Close</span><span class="ctrlbtn">Edit Color</span><span class="ctrlbtn del">🗑</span></span>
+          </div>
+          <div class="ctrlrow" style="--swc:var(--tab-orange)">
+            <span class="ctrlname">ML_Plastic_Shiny_Beige</span>
+            <span class="ctrlactions"><span class="ctrlbtn">Open</span><span class="ctrlbtn">Close</span><span class="ctrlbtn">Edit Color</span><span class="ctrlbtn del">🗑</span></span>
+          </div>
+          <div class="ctrlrow" style="--swc:var(--tab-cyan)">
+            <span class="ctrlname">T_ML_Aluminum01</span>
+            <span class="ctrlactions"><span class="ctrlbtn">Open</span><span class="ctrlbtn">Close</span><span class="ctrlbtn">Edit Color</span><span class="ctrlbtn del">🗑</span></span>
+          </div>
+          <div class="ctrlrow" style="--swc:var(--tab-green)">
+            <span class="ctrlname">SK_Mannequin_Arms_Skeleton</span>
+            <span class="ctrlactions"><span class="ctrlbtn">Open</span><span class="ctrlbtn">Close</span><span class="ctrlbtn">Edit Color</span><span class="ctrlbtn del">🗑</span></span>
+          </div>
+          <div class="ctrlmenu-foot">White marker = default (no color assigned) · Drag rows to reorder</div>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-magenta)">
+          <div class="step-num" aria-hidden="true">1</div>
+          <div>
+            <h3>Drag to reorder — and set the startup order</h3>
+            <p>Grab any row and drag it up or down the list. The order here isn't just cosmetic: it's the <strong>order your tabs open in when Tab Assist restores them on editor start</strong>. Put your most-used asset first and it's the tab in focus every morning.</p>
+          </div>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-magenta)">
+          <div class="step-num" aria-hidden="true">2</div>
+          <div>
+            <h3>Edit colors, open, close and remove — all from one place</h3>
+            <p>Each row carries a <strong>color marker</strong> showing that tab's saved color — <strong>white means default</strong>, no color assigned. Every row also has quick actions: <strong>Open</strong> the asset's editor, <strong>Close</strong> its tab, <strong>Edit Color</strong> to change the saved color (stored with the asset and reapplied every time the tab opens), or delete it from your saved list entirely — no need to touch the tab strip itself.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
