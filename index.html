@@ -594,11 +594,40 @@
 </footer>
 
 <script>
-/* Control Menu demo: drag rows to reorder (mouse + touch via pointer events) */
+/* Control Menu demo: drag rows to reorder (mouse + touch via pointer events).
+   Order is cached in localStorage and restored on page load. */
 (function(){
   var menu = document.querySelector('.ctrlmenu');
   if(!menu) return;
   var dragRow = null;
+  var STORE_KEY = 'tabassist-demo-order';
+
+  function rowId(row){
+    var name = row.querySelector('.ctrlname');
+    return name ? name.textContent.trim() : '';
+  }
+
+  function saveOrder(){
+    try{
+      var ids = [].map.call(menu.querySelectorAll('.ctrlrow'), rowId);
+      localStorage.setItem(STORE_KEY, JSON.stringify(ids));
+    }catch(err){ /* storage unavailable (private mode etc.) — demo still works */ }
+  }
+
+  function restoreOrder(){
+    try{
+      var saved = JSON.parse(localStorage.getItem(STORE_KEY));
+      if(!Array.isArray(saved)) return;
+      var rows = [].slice.call(menu.querySelectorAll('.ctrlrow'));
+      var anchor = rows[0];
+      var parent = anchor.parentNode;
+      var next = anchor; /* insert restored rows where the first row currently sits */
+      saved.forEach(function(id){
+        var row = rows.find(function(r){ return rowId(r) === id; });
+        if(row){ parent.insertBefore(row, next); }
+      });
+    }catch(err){ /* ignore bad/missing data */ }
+  }
 
   menu.addEventListener('pointerdown', function(e){
     var row = e.target.closest('.ctrlrow');
@@ -624,10 +653,13 @@
     if(dragRow){
       dragRow.classList.remove('dragging');
       dragRow = null;
+      saveOrder();
     }
   }
   menu.addEventListener('pointerup', endDrag);
   menu.addEventListener('pointercancel', endDrag);
+
+  restoreOrder();
 })();
 </script>
 </body>
