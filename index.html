@@ -619,12 +619,10 @@
       var saved = JSON.parse(localStorage.getItem(STORE_KEY));
       if(!Array.isArray(saved)) return;
       var rows = [].slice.call(menu.querySelectorAll('.ctrlrow'));
-      var anchor = rows[0];
-      var parent = anchor.parentNode;
-      var next = anchor; /* insert restored rows where the first row currently sits */
+      var foot = menu.querySelector('.ctrlmenu-foot');
       saved.forEach(function(id){
         var row = rows.find(function(r){ return rowId(r) === id; });
-        if(row){ parent.insertBefore(row, next); }
+        if(row){ row.parentNode.insertBefore(row, foot); }
       });
     }catch(err){ /* ignore bad/missing data */ }
   }
