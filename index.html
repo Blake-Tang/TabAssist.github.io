@@ -97,7 +97,11 @@
     padding:5px 10px;border-radius:4px;
   }
   nav.mainnav a:hover{color:var(--text);background:var(--panel-2);text-decoration:none}
-  @media (max-width:640px){ nav.mainnav a:nth-child(n+4){display:none} }
+  nav.mainnav a.nav-cta{
+    color:#1A1206;background:var(--tab-orange);font-weight:500;
+  }
+  nav.mainnav a.nav-cta:hover{background:#F2984F;color:#1A1206}
+  @media (max-width:640px){ nav.mainnav a:nth-child(n+4):not(.nav-cta){display:none} }
 
   /* ============ HERO ============ */
   .hero{padding:72px 0 56px;border-bottom:1px solid var(--line-soft)}
@@ -125,31 +129,6 @@
   .btn-ghost:hover{background:var(--panel-2)}
   .hero-note{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 
-  /* Mock editor tab strip in hero — this is the visual thesis of the page */
-  .mock-strip{
-    margin-top:52px;background:var(--panel);
-    border:1px solid var(--line);border-radius:8px;overflow:hidden;
-  }
-  .mock-strip .strip-bar{
-    display:flex;align-items:flex-end;gap:2px;
-    padding:10px 10px 0;background:var(--panel-2);
-    border-bottom:1px solid var(--line);overflow-x:auto;
-  }
-  .mock-tab{
-    font-family:var(--mono);font-size:12px;color:var(--muted);
-    background:var(--panel);border:1px solid var(--line);border-bottom:none;
-    border-radius:6px 6px 0 0;padding:7px 14px 8px;
-    display:flex;align-items:center;gap:10px;white-space:nowrap;
-    position:relative;flex:none;
-  }
-  .mock-tab::before{
-    content:"";position:absolute;left:0;right:0;top:0;height:3px;
-    border-radius:6px 6px 0 0;background:var(--tabc,transparent);
-  }
-  .mock-tab.active{color:var(--text);background:var(--bg)}
-  .mock-tab .x{color:var(--muted);font-size:11px}
-  .mock-body{padding:20px 22px;font-family:var(--mono);font-size:13px;color:var(--muted)}
-  .mock-body .saved{color:var(--tab-green)}
 
   /* ============ SECTIONS AS DOCK TABS (signature element) ============
      Every section header is rendered as a docked editor tab with a
@@ -165,9 +144,40 @@
     content:"";position:absolute;left:0;right:0;top:0;height:3px;
     border-radius:8px 8px 0 0;background:var(--secc,var(--tab-orange));
   }
-  .docktab h2{
+  .docktab h2, .docktab .tabtitle{
     font-family:var(--display);font-weight:600;font-size:19px;
     letter-spacing:.02em;
+  }
+
+  /* Tabbed workflow group */
+  .tabgroup .tabrow{
+    display:flex;gap:6px;flex-wrap:nowrap;
+    overflow-x:auto;scrollbar-width:none;
+    position:relative;z-index:1;margin-bottom:-1px;
+  }
+  .tabgroup .tabrow::-webkit-scrollbar{display:none}
+  button.docktab{cursor:pointer;font:inherit;color:var(--text);text-align:left}
+  .tabrow .docktab{
+    background:var(--panel-2);
+    border-bottom:1px solid var(--line);
+    margin-bottom:0;flex:none;
+    padding:10px 16px 11px;gap:10px;
+  }
+  .tabrow .docktab .tabtitle{font-size:17px;white-space:nowrap}
+  .tabrow .docktab .tag{white-space:nowrap}
+  .tabrow .docktab[aria-selected="true"]{
+    background:var(--panel);
+    border-bottom:1px solid var(--panel);
+  }
+  .tabrow .docktab[aria-selected="false"] .tabtitle,
+  .tabrow .docktab[aria-selected="false"] .tag{color:var(--muted)}
+  .tabrow .docktab[aria-selected="false"]::before{opacity:.35}
+  .tabrow .docktab[aria-selected="false"]:hover{background:var(--panel)}
+  .tabgroup .dockbody{border-radius:0 8px 8px 8px}
+  @media (max-width:1020px){ .tabrow .docktab .tag{display:none} }
+  @media (max-width:700px){
+    .tabrow .docktab{padding:9px 13px 10px}
+    .tabrow .docktab .tabtitle{font-size:14px}
   }
   .docktab .tag{
     font-family:var(--mono);font-size:11px;color:var(--muted);
@@ -312,7 +322,7 @@
       <a href="#control-menu">Control Menu</a>
       <a href="#features">Features</a>
       <a href="#settings">Settings</a>
-      <a href="#install">Install</a>
+      <a class="nav-cta" href="https://www.fab.com/listings/6d7c9d2c-0318-4bbc-afa9-b38c42638400">Get on Fab</a>
     </nav>
   </div>
 </header>
@@ -324,34 +334,69 @@
     <div class="wrap">
       <p class="eyebrow">Unreal Engine Editor Plugin</p>
       <h1>Your tabs, <span class="hl">saved</span>. Every session.</h1>
-      <p class="lede">Tab Assist remembers the asset editor tabs you work in — save them, reopen them in one click, bring back closed tabs with a shortcut, and color-code them so you never lose your place in a big project.</p>
+      <p class="lede">Tab Assist helps you auto reopen your tabs when starting Unreal Engine, bring back closed tabs with a shortcut, and color-code them so you never lose your place in a big project.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#save-tabs">How to save tabs</a>
-        <a class="btn btn-ghost" href="https://www.fab.com/listings/6d7c9d2c-0318-4bbc-afa9-b38c42638400" target="_blank" rel="noopener">Get the plugin</a>
+        <a class="btn btn-primary" href="https://www.fab.com/listings/6d7c9d2c-0318-4bbc-afa9-b38c42638400">Get on Fab</a>
+        <a class="btn btn-ghost" href="#save-tabs">How to save tabs</a>
         <span class="hero-note">UE5 · Editor plugin</span>
-      </div>
-
-      <!-- Mock tab strip: swap for a real screenshot/GIF of your editor if you prefer -->
-      <div class="mock-strip" role="img" aria-label="Illustration of colored, saved editor tabs in Unreal Engine">
-        <div class="strip-bar">
-          <div class="mock-tab active" style="--tabc:var(--tab-orange)">BP_PlayerCharacter <span class="x">✕</span></div>
-          <div class="mock-tab" style="--tabc:var(--tab-cyan)">WBP_MainHUD <span class="x">✕</span></div>
-          <div class="mock-tab" style="--tabc:var(--tab-green)">M_Environment <span class="x">✕</span></div>
-          <div class="mock-tab" style="--tabc:var(--tab-magenta)">ABP_Enemy <span class="x">✕</span></div>
-          <div class="mock-tab">NS_Explosion <span class="x">✕</span></div>
-        </div>
-        <div class="mock-body">
-          <span class="saved">✓ 4 tabs saved</span> — restored automatically next time you open the editor. Reopen a closed tab any time with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- ================= SAVE TABS (main tutorial) ================= -->
-  <section id="save-tabs" style="--secc:var(--tab-orange)">
-    <div class="wrap">
-      <div class="docktab"><h2>How to Save Tabs</h2><span class="tag">Core workflow</span></div>
-      <div class="dockbody">
+  <!-- ================= WORKFLOWS (tabbed: restore / save / control menu) ================= -->
+  <section id="workflows">
+    <div class="wrap tabgroup">
+      <div class="tabrow" role="tablist" aria-label="Tab Assist workflows">
+        <button class="docktab" role="tab" aria-controls="auto-restore" aria-selected="true" style="--secc:var(--tab-cyan)">
+          <span class="tabtitle">Restore on Editor Start</span><span class="tag">Automatic</span>
+        </button>
+        <button class="docktab" role="tab" aria-controls="save-tabs" aria-selected="false" style="--secc:var(--tab-orange)">
+          <span class="tabtitle">How to Save Tabs</span><span class="tag">Core workflow</span>
+        </button>
+        <button class="docktab" role="tab" aria-controls="control-menu" aria-selected="false" style="--secc:var(--tab-magenta)">
+          <span class="tabtitle">The Tab Control Menu</span><span class="tag">Manage saved tabs</span>
+        </button>
+      </div>
+
+      <div class="dockbody" id="auto-restore" role="tabpanel" style="--secc:var(--tab-cyan)">
+
+        <p>Once a tab is saved, you never have to reopen it by hand again. When the Unreal editor launches, Tab Assist reads your saved list and <strong>reopens every saved tab automatically</strong> — your workspace is back exactly where you left it, before you've even touched the Content Browser.</p>
+
+        <div class="step" style="--secc:var(--tab-cyan)">
+          <div class="step-num" aria-hidden="true">1</div>
+          <div>
+            <h3>Save the tabs you work in</h3>
+            <p>Right-click a tab and add it to your saved tabs, or use <strong>Save All Opened Tabs</strong> to store your whole session. <a href="#save-tabs">See the saving walkthrough ↑</a></p>
+          </div>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-cyan)">
+          <div class="step-num" aria-hidden="true">2</div>
+          <div>
+            <h3>Close the editor like normal</h3>
+            <p>No extra step on shutdown. Saved tabs live in your project's per-user settings, so they survive editor restarts, crashes and machine reboots.</p>
+          </div>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-cyan)">
+          <div class="step-num" aria-hidden="true">3</div>
+          <div>
+            <h3>Launch — your tabs are already open</h3>
+            <p>On startup, Tab Assist reopens each saved asset editor as a tab in the main window. Assigned tab colors are reapplied at the same time, so the strip looks identical to your last session.</p>
+            <figure class="media">
+              <img src="images/OpenEditor_GIF.gif" alt="">
+              <figcaption>Editor start: saved tabs reopen on their own, colors included.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <h3 style="margin-top:30px">Choose what comes back</h3>
+        <p>The <strong>Restore Tab Behavior</strong> setting in Editor Preferences controls startup restore: <strong>Restore Only Saved Tabs</strong> (the default) reopens just your saved list, <strong>Restore Saved Tabs and Left Open Tabs</strong> also brings back whatever was open when you closed the editor, and <strong>Never Restore</strong> turns startup restore off entirely.</p>
+      
+      </div>
+
+      <div class="dockbody" id="save-tabs" role="tabpanel" hidden style="--secc:var(--tab-orange)">
+
         <p>Saving a tab tells Tab Assist to remember that asset. Saved tabs live in your project's per-user settings, survive editor restarts, and can be reopened individually or all at once. There are two ways to save: <strong>per tab</strong> or <strong>everything at once</strong>.</p>
 
         <div class="step" style="--secc:var(--tab-orange)">
@@ -390,56 +435,11 @@
           </figure>
         </div>
 
+      
       </div>
-    </div>
-  </section>
 
-  <!-- ================= RESTORE ON STARTUP ================= -->
-  <section id="auto-restore" style="--secc:var(--tab-cyan)">
-    <div class="wrap">
-      <div class="docktab"><h2>Restore on Editor Start</h2><span class="tag">Automatic</span></div>
-      <div class="dockbody">
-        <p>Once a tab is saved, you never have to reopen it by hand again. When the Unreal editor launches, Tab Assist reads your saved list and <strong>reopens every saved tab automatically</strong> — your workspace is back exactly where you left it, before you've even touched the Content Browser.</p>
+      <div class="dockbody" id="control-menu" role="tabpanel" hidden style="--secc:var(--tab-magenta)">
 
-        <div class="step" style="--secc:var(--tab-cyan)">
-          <div class="step-num" aria-hidden="true">1</div>
-          <div>
-            <h3>Save the tabs you work in</h3>
-            <p>Right-click a tab and add it to your saved tabs, or use <strong>Save All Opened Tabs</strong> to store your whole session. <a href="#save-tabs">See the saving walkthrough ↑</a></p>
-          </div>
-        </div>
-
-        <div class="step" style="--secc:var(--tab-cyan)">
-          <div class="step-num" aria-hidden="true">2</div>
-          <div>
-            <h3>Close the editor like normal</h3>
-            <p>No extra step on shutdown. Saved tabs live in your project's per-user settings, so they survive editor restarts, crashes and machine reboots.</p>
-          </div>
-        </div>
-
-        <div class="step" style="--secc:var(--tab-cyan)">
-          <div class="step-num" aria-hidden="true">3</div>
-          <div>
-            <h3>Launch — your tabs are already open</h3>
-            <p>On startup, Tab Assist reopens each saved asset editor as a tab in the main window. Assigned tab colors are reapplied at the same time, so the strip looks identical to your last session.</p>
-            <figure class="media">
-              <img src="images/OpenEditor_GIF.gif" alt="">
-              <figcaption>Editor start: saved tabs reopen on their own, colors included.</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <h3 style="margin-top:30px">Choose what comes back</h3>
-        <p>The <strong>Restore Tab Behavior</strong> setting in Editor Preferences controls startup restore: <strong>Restore Only Saved Tabs</strong> (the default) reopens just your saved list, <strong>Restore Saved Tabs and Left Open Tabs</strong> also brings back whatever was open when you closed the editor, and <strong>Never Restore</strong> turns startup restore off entirely.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= CONTROL MENU ================= -->
-  <section id="control-menu" style="--secc:var(--tab-magenta)">
-    <div class="wrap">
-      <div class="docktab"><h2>The Tab Control Menu</h2><span class="tag">Manage saved tabs</span></div>
-      <div class="dockbody">
         <p>The Control Menu is Tab Assist's home base — one dockable panel that lists <strong>every saved tab</strong> in your project. From here you can reorder tabs, edit their colors, and open or close them without hunting through the Content Browser.</p>
 
         <!-- Mock control menu: interactive — drag rows to reorder -->
@@ -484,6 +484,7 @@
           </div>
         </div>
 
+      
       </div>
     </div>
   </section>
@@ -570,7 +571,7 @@
           <div>
             <h3>Add Tab Assist to your project</h3>
             <p>Install from Fab / the marketplace, or drop the plugin folder into your project's <span style="font-family:var(--mono);font-size:.9em">Plugins/</span> directory.
-            <a href="https://www.fab.com/listings/6d7c9d2c-0318-4bbc-afa9-b38c42638400" target="_blank" rel="noopener">Get Tab Assist on Fab</a>.</p>
+            <a href="https://www.fab.com/listings/6d7c9d2c-0318-4bbc-afa9-b38c42638400">Get Tab Assist on Fab</a>.</p>
           </div>
         </div>
         <div class="step" style="--secc:var(--tab-yellow)">
@@ -601,6 +602,39 @@
 </footer>
 
 <script>
+/* Workflow tabs: toggle the three panels; anchor links (#save-tabs etc.)
+   activate the matching tab before scrolling. */
+(function(){
+  var tabs = [].slice.call(document.querySelectorAll('.tabgroup [role="tab"]'));
+  var panels = [].slice.call(document.querySelectorAll('.tabgroup [role="tabpanel"]'));
+  if(!tabs.length) return;
+
+  function activate(id){
+    panels.forEach(function(p){ p.hidden = (p.id !== id); });
+    tabs.forEach(function(t){
+      t.setAttribute('aria-selected', t.getAttribute('aria-controls') === id ? 'true' : 'false');
+    });
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ activate(t.getAttribute('aria-controls')); });
+  });
+
+  function handleHash(scroll){
+    var id = location.hash.replace('#','');
+    if(panels.some(function(p){ return p.id === id; })){
+      activate(id);
+      if(scroll){
+        var el = document.getElementById('workflows');
+        if(el) el.scrollIntoView();
+      }
+    }
+  }
+  window.addEventListener('hashchange', function(){ handleHash(true); });
+  activate('auto-restore'); /* default tab on load */
+  handleHash(false);        /* unless the URL explicitly targets another panel */
+})();
+
 /* Control Menu demo: drag rows to reorder (mouse + touch via pointer events).
    Order is cached in localStorage and restored on page load. */
 (function(){
