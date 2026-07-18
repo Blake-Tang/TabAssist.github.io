@@ -94,14 +94,19 @@
   nav.mainnav{display:flex;gap:4px;margin-left:auto}
   nav.mainnav a{
     font-family:var(--mono);font-size:12.5px;color:var(--muted);
-    padding:5px 10px;border-radius:4px;
+    padding:5px 10px;border-radius:4px;white-space:nowrap;
   }
   nav.mainnav a:hover{color:var(--text);background:var(--panel-2);text-decoration:none}
   nav.mainnav a.nav-cta{
     color:#1A1206;background:var(--tab-orange);font-weight:500;
   }
   nav.mainnav a.nav-cta:hover{background:#F2984F;color:#1A1206}
-  @media (max-width:640px){ nav.mainnav a:nth-child(n+4):not(.nav-cta){display:none} }
+  @media (max-width:860px){ nav.mainnav a:nth-child(n+3):not(.nav-cta){display:none} }
+  @media (max-width:640px){
+    nav.mainnav a:not(.nav-cta){display:none}
+    .logo{font-size:13px;white-space:nowrap}
+    .menubar-inner{height:44px}
+  }
 
   /* ============ HERO ============ */
   .hero{padding:72px 0 56px;border-bottom:1px solid var(--line-soft)}
@@ -176,8 +181,8 @@
   .tabgroup .dockbody{border-radius:0 8px 8px 8px}
   @media (max-width:1020px){ .tabrow .docktab .tag{display:none} }
   @media (max-width:700px){
-    .tabrow .docktab{padding:9px 13px 10px}
-    .tabrow .docktab .tabtitle{font-size:14px}
+    .tabrow .docktab{padding:7px 11px 8px;gap:0}
+    .tabrow .docktab .tabtitle{font-size:12.5px}
   }
   .docktab .tag{
     font-family:var(--mono);font-size:11px;color:var(--muted);
