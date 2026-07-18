@@ -83,7 +83,7 @@
   .logo{
     font-family:var(--display);font-weight:700;font-size:15px;
     letter-spacing:.06em;text-transform:uppercase;color:var(--text);
-    display:flex;align-items:center;gap:9px;
+    display:flex;align-items:center;gap:9px;white-space:nowrap;flex:none;
   }
   .logo:hover{text-decoration:none}
   .logo .pin{
@@ -91,21 +91,21 @@
     background:linear-gradient(135deg,var(--tab-orange),var(--tab-magenta));
     flex:none;
   }
-  nav.mainnav{display:flex;gap:4px;margin-left:auto}
+  nav.mainnav{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:nowrap}
   nav.mainnav a{
     font-family:var(--mono);font-size:12.5px;color:var(--muted);
     padding:5px 10px;border-radius:4px;white-space:nowrap;
   }
   nav.mainnav a:hover{color:var(--text);background:var(--panel-2);text-decoration:none}
   nav.mainnav a.nav-cta{
-    color:#1A1206;background:var(--tab-orange);font-weight:500;
+    color:#1A1206;background:var(--tab-orange);font-weight:500;flex:none;
   }
   nav.mainnav a.nav-cta:hover{background:#F2984F;color:#1A1206}
-  @media (max-width:860px){ nav.mainnav a:nth-child(n+3):not(.nav-cta){display:none} }
-  @media (max-width:640px){
+  @media (max-width:900px){ nav.mainnav a:nth-child(n+3):not(.nav-cta){display:none} }
+  @media (max-width:720px){
     nav.mainnav a:not(.nav-cta){display:none}
-    .logo{font-size:13px;white-space:nowrap}
-    .menubar-inner{height:44px}
+    .logo{font-size:13px}
+    .menubar-inner{height:44px;gap:12px}
   }
 
   /* ============ HERO ============ */
