@@ -192,7 +192,12 @@
     background:var(--panel);border:1px solid var(--line);
     border-radius:0 8px 8px 8px;padding:34px 34px 38px;
   }
-  @media (max-width:640px){ .dockbody{padding:24px 18px 28px} }
+  @media (max-width:640px){
+    .wrap{padding:0 16px}
+    .dockbody{padding:20px 16px 24px}
+    .dockbody p{font-size:14.5px;line-height:1.6}
+    .dockbody h3{font-size:15px}
+  }
 
   .dockbody p{color:var(--muted);max-width:66ch;margin-bottom:16px}
   .dockbody p strong{color:var(--text);font-weight:600}
@@ -215,8 +220,10 @@
   .step p{margin-bottom:14px}
   .step .media{grid-column:2}
   @media (max-width:560px){
-    .step{grid-template-columns:1fr}
-    .step .media{grid-column:1}
+    .step{grid-template-columns:32px 1fr;gap:0 12px;padding:20px 0}
+    .step-num{font-size:19px}
+    .step h3{font-size:15.5px}
+    .step .media{grid-column:1/-1}
   }
 
   /* ============ MEDIA PLACEHOLDERS ============
