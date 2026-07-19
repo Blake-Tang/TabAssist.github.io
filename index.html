@@ -120,7 +120,7 @@
   h1{
     font-family:var(--display);font-weight:700;
     font-size:clamp(30px,5vw,50px);line-height:1.12;
-    letter-spacing:-.01em;max-width:19ch;margin-bottom:20px;
+    letter-spacing:-.01em;max-width:24ch;margin-bottom:20px;
   }
   h1 .hl{color:var(--tab-orange)}
   .hero p.lede{max-width:56ch;color:var(--muted);font-size:17.5px;margin-bottom:30px}
@@ -348,11 +348,11 @@
   <div class="hero">
     <div class="wrap">
       <p class="eyebrow">Unreal Engine Editor Plugin</p>
-      <h1>Your tabs, <span class="hl">saved</span>. Every session.</h1>
+      <h1>Skip the setup. Your Blueprints are <span class="hl">already open</span>.</h1>
       <p class="lede">Tab Assist helps you auto reopen your tabs when starting Unreal Engine, bring back closed tabs with a shortcut, and color-code them so you never lose your place in a big project.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="https://www.fab.com/listings/6d7c9d2c-0318-4bbc-afa9-b38c42638400">Get on Fab</a>
-        <span class="hero-note">UE5 · Editor plugin</span>
+        <span class="hero-note">Editor Plugin</span>
       </div>
     </div>
   </div>
@@ -364,6 +364,9 @@
         <button class="docktab" role="tab" aria-controls="auto-restore" aria-selected="true" style="--secc:var(--tab-cyan)">
           <span class="tabtitle">Restore on Editor Start</span><span class="tag">Automatic</span>
         </button>
+        <button class="docktab" role="tab" aria-controls="reopen-tabs" aria-selected="false" style="--secc:var(--tab-green)">
+          <span class="tabtitle">Reopen Closed Tabs</span><span class="tag">Ctrl+Shift+T</span>
+        </button>
         <button class="docktab" role="tab" aria-controls="save-tabs" aria-selected="false" style="--secc:var(--tab-orange)">
           <span class="tabtitle">How to Save Tabs</span><span class="tag">Core workflow</span>
         </button>
@@ -374,13 +377,13 @@
 
       <div class="dockbody" id="auto-restore" role="tabpanel" style="--secc:var(--tab-cyan)">
 
-        <p>Once a tab is saved, you never have to reopen it by hand again. When the Unreal editor launches, Tab Assist reads your saved list and <strong>reopens every saved tab automatically</strong> — your workspace is back exactly where you left it, before you've even touched the Content Browser.</p>
+        <p>Save a tab once and it's handled. Every time the editor launches, Tab Assist <strong>reopens your saved tabs automatically</strong> — your workspace is back before you've touched the Content Browser.</p>
 
         <div class="step" style="--secc:var(--tab-cyan)">
           <div class="step-num" aria-hidden="true">1</div>
           <div>
             <h3>Save the tabs you work in</h3>
-            <p>Right-click a tab and add it to your saved tabs, or use <strong>Save All Opened Tabs</strong> to store your whole session.</p>
+            <p>Right-click a tab, or use <strong>Save All Opened Tabs</strong> for the whole session.</p>
           </div>
         </div>
 
@@ -388,7 +391,6 @@
           <div class="step-num" aria-hidden="true">2</div>
           <div>
             <h3>Close the editor like normal</h3>
-            <p>No extra step on shutdown. Saved tabs live in your project's per-user settings, so they survive editor restarts, crashes and machine reboots.</p>
           </div>
         </div>
 
@@ -396,7 +398,6 @@
           <div class="step-num" aria-hidden="true">3</div>
           <div>
             <h3>Launch — your tabs are already open</h3>
-            <p>On startup, Tab Assist reopens each saved asset editor as a tab in the main window. Assigned tab colors are reapplied at the same time, so the strip looks identical to your last session.</p>
             <figure class="media">
               <img src="images/OpenEditor_GIF.gif" alt="" loading="lazy" decoding="async">
               <figcaption>Editor start: saved tabs reopen on their own, colors included.</figcaption>
@@ -405,19 +406,46 @@
         </div>
 
         <h3 style="margin-top:30px">Choose what comes back</h3>
-        <p>The <strong>Restore Tab Behavior</strong> setting in Editor Preferences controls startup restore: <strong>Restore Only Saved Tabs</strong> (the default) reopens just your saved list, <strong>Restore Saved Tabs and Left Open Tabs</strong> also brings back whatever was open when you closed the editor, and <strong>Never Restore</strong> turns startup restore off entirely.</p>
+        <p>Pick a mode under <strong>Restore Tab Behavior</strong> in Editor Preferences:</p>
+        <p style="margin-bottom:8px"><strong>Only Saved Tabs</strong> — reopens your saved list. The default.</p>
+        <p style="margin-bottom:8px"><strong>Saved + Left Open Tabs</strong> — also brings back whatever was open at shutdown.</p>
+        <p><strong>Never Restore</strong> — nothing reopens on start.</p>
       
+      </div>
+
+      <div class="dockbody" id="reopen-tabs" role="tabpanel" hidden style="--secc:var(--tab-green)">
+
+        <p>Closed a tab by accident? Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> and it's back — <strong>just like your web browser</strong>.</p>
+
+        <div class="step" style="--secc:var(--tab-green)">
+          <div class="step-num" aria-hidden="true">1</div>
+          <div>
+            <h3>Close any asset editor tab</h3>
+            <p>On purpose or by accident — Tab Assist keeps track either way.</p>
+          </div>
+        </div>
+
+        <div class="step" style="--secc:var(--tab-green)">
+          <div class="step-num" aria-hidden="true">2</div>
+          <div>
+            <h3>Hit <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd></h3>
+            <p>The most recently closed tab reopens instantly, no Content Browser needed.</p>
+          </div>
+        </div>
+
+        <p style="margin-top:24px">Prefer a different shortcut? It's <strong>rebindable</strong> in Editor Preferences.</p>
+
       </div>
 
       <div class="dockbody" id="save-tabs" role="tabpanel" hidden style="--secc:var(--tab-orange)">
 
-        <p>Saving a tab tells Tab Assist to remember that asset. Saved tabs live in your project's per-user settings, survive editor restarts, and can be reopened individually or all at once. There are two ways to save: <strong>per tab</strong> or <strong>everything at once</strong>.</p>
+        <p>Two ways to save: <strong>per tab</strong> or <strong>everything at once</strong>. Saved tabs survive editor restarts.</p>
 
         <div class="step" style="--secc:var(--tab-orange)">
           <div class="step-num" aria-hidden="true">1</div>
           <div>
             <h3>Right-click the tab → Add to Saved Tabs</h3>
-            <p>Right-click any open tab. Tab Assist extends the tab's context menu with a save option — click it and that asset is added to your saved list. The same menu lets you <strong>remove</strong> a tab from the saved list later.</p>
+            <p>The same menu lets you remove it later.</p>
           </div>
           <figure class="media">
             <img src="images/SaveTab_GIF.gif" alt="Right-clicking an asset editor tab in Unreal Engine and choosing the Tab Assist save option from the context menu" loading="lazy" decoding="async">
@@ -429,7 +457,7 @@
           <div class="step-num" aria-hidden="true">2</div>
           <div>
             <h3>Or save every open tab at once</h3>
-            <p>Setting up a work session? Use <strong>Save All Opened Tabs</strong> from the Tab Assist menu in the editor's menu bar to store everything that's currently open in one action.</p>
+            <p>Use <strong>Save All Opened Tabs</strong> from the Tab Assist menu.</p>
           </div>
           <figure class="media">
              <img src="images/SaveAllTabs_GIF.gif" alt="" loading="lazy" decoding="async">
@@ -441,11 +469,11 @@
           <div class="step-num" aria-hidden="true">3</div>
           <div>
             <h3>Reopen saved tabs any time</h3>
-            <p>Your saved tabs are listed in the Tab Assist menu — click one to reopen just that asset, or open <strong>all stored tabs</strong> in a single action. With restore enabled in the settings, saved tabs come back automatically when the editor starts.</p>
+            <p>Pick one from the Tab Assist menu — or open all stored tabs in one action.</p>
           </div>
           <figure class="media">
              <img src="images/OpenTab_GIF.gif" alt="" loading="lazy" decoding="async">
-            <figcaption>Save all open tabs with one click of a button</figcaption>
+            <figcaption>Reopen any saved tab straight from the menu.</figcaption>
           </figure>
         </div>
 
