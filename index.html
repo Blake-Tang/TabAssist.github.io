@@ -359,11 +359,11 @@
   <section id="workflows">
     <div class="wrap tabgroup">
       <div class="tabrow" role="tablist" aria-label="Tab Assist workflows">
-        <button class="docktab" role="tab" aria-controls="auto-restore" aria-selected="true" style="--secc:var(--tab-cyan)">
-          <span class="tabtitle">Restore on Editor Start</span><span class="tag">Automatic</span>
-        </button>
-        <button class="docktab" role="tab" aria-controls="reopen-tabs" aria-selected="false" style="--secc:var(--tab-green)">
+        <button class="docktab" role="tab" aria-controls="reopen-tabs" aria-selected="true" style="--secc:var(--tab-green)">
           <span class="tabtitle">Reopen Closed Tabs</span><span class="tag">Ctrl+Shift+T</span>
+        </button>
+        <button class="docktab" role="tab" aria-controls="auto-restore" aria-selected="false" style="--secc:var(--tab-cyan)">
+          <span class="tabtitle">Restore on Editor Start</span><span class="tag">Automatic</span>
         </button>
         <button class="docktab" role="tab" aria-controls="save-tabs" aria-selected="false" style="--secc:var(--tab-orange)">
           <span class="tabtitle">How to Save Tabs</span><span class="tag">Core workflow</span>
@@ -373,45 +373,7 @@
         </button>
       </div>
 
-      <div class="dockbody" id="auto-restore" role="tabpanel" style="--secc:var(--tab-cyan)">
-
-        <p>Save a tab once and it's handled. Every time the editor launches, Tab Assist <strong>reopens your saved tabs automatically</strong> — your workspace is back before you've touched the Content Browser.</p>
-
-        <div class="step" style="--secc:var(--tab-cyan)">
-          <div class="step-num" aria-hidden="true">1</div>
-          <div>
-            <h3>Save the tabs you work in</h3>
-            <p>Right-click a tab, or use <strong>Save All Opened Tabs</strong> for the whole session.</p>
-          </div>
-        </div>
-
-        <div class="step" style="--secc:var(--tab-cyan)">
-          <div class="step-num" aria-hidden="true">2</div>
-          <div>
-            <h3>Close the editor like normal</h3>
-          </div>
-        </div>
-
-        <div class="step" style="--secc:var(--tab-cyan)">
-          <div class="step-num" aria-hidden="true">3</div>
-          <div>
-            <h3>Launch — your tabs are already open</h3>
-            <figure class="media">
-              <img src="images/OpenEditor_GIF.gif" alt="" loading="lazy" decoding="async">
-              <figcaption>Editor start: saved tabs reopen on their own, colors included.</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <h3 style="margin-top:30px">Choose what comes back</h3>
-        <p>Pick a mode under <strong>Restore Tab Behavior</strong> in Editor Preferences:</p>
-        <p style="margin-bottom:8px"><strong>Only Saved Tabs</strong> — reopens your saved list. The default.</p>
-        <p style="margin-bottom:8px"><strong>Saved + Left Open Tabs</strong> — also brings back whatever was open at shutdown.</p>
-        <p><strong>Never Restore</strong> — nothing reopens on start.</p>
-      
-      </div>
-
-      <div class="dockbody" id="reopen-tabs" role="tabpanel" hidden style="--secc:var(--tab-green)">
+      <div class="dockbody" id="reopen-tabs" role="tabpanel" style="--secc:var(--tab-green)">
 
         <p>Closed a tab by accident? Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> and it's back — <strong>just like your web browser</strong>.</p>
 
@@ -433,6 +395,25 @@
 
         <p style="margin-top:24px">Prefer a different shortcut? It's <strong>rebindable</strong> in Editor Preferences.</p>
 
+      </div>
+
+      <div class="dockbody" id="auto-restore" role="tabpanel" hidden style="--secc:var(--tab-cyan)">
+
+        <p>Your saved tabs <strong>reopen themselves when the editor starts</strong> — colors included. No setup ritual, no digging through the Content Browser: the Blueprints and assets you're building with are already on screen.</p>
+
+        <p>Save your working set once and every session picks up exactly where the last one ended — whether you closed the editor, restarted your machine, or the editor crashed mid-session.</p>
+
+        <figure class="media">
+          <img src="images/OpenEditor_GIF.gif" alt="" loading="lazy" decoding="async">
+          <figcaption>Editor start: saved tabs reopen on their own, colors included.</figcaption>
+        </figure>
+
+        <h3 style="margin-top:30px">Choose what comes back</h3>
+        <p>Pick a mode under <strong>Restore Tab Behavior</strong> in Editor Preferences:</p>
+        <p style="margin-bottom:8px"><strong>Only Saved Tabs</strong> — reopens your saved list. The default.</p>
+        <p style="margin-bottom:8px"><strong>Saved + Left Open Tabs</strong> — also brings back whatever was open at shutdown.</p>
+        <p><strong>Never Restore</strong> — nothing reopens on start.</p>
+      
       </div>
 
       <div class="dockbody" id="save-tabs" role="tabpanel" hidden style="--secc:var(--tab-orange)">
@@ -532,12 +513,20 @@
   <!-- ================= FEATURES ================= -->
   <section id="features" style="--secc:var(--tab-green)">
     <div class="wrap">
-      <div class="docktab"><h2>Everything Else It Does</h2><span class="tag">Feature overview</span></div>
+      <div class="docktab"><h2>Everything It Does</h2><span class="tag">Feature overview</span></div>
       <div class="dockbody">
         <div class="grid">
           <div class="card" style="--cardc:var(--tab-cyan)">
+            <h3>Restore on editor start</h3>
+            <p>Saved tabs reopen automatically when the editor launches — your workspace is ready before you are.</p>
+          </div>
+          <div class="card" style="--cardc:var(--tab-orange)">
+            <h3>Save tabs</h3>
+            <p>Right-click any tab to save it, or store your whole session at once with <strong>Save All Opened Tabs</strong>.</p>
+          </div>
+          <div class="card" style="--cardc:var(--tab-green)">
             <h3>Reopen closed tabs</h3>
-            <p>Closed something by accident? <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> brings back the most recently closed tab — just like a browser. Rebindable in the settings.</p>
+            <p>Closed something by accident? <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> brings it back — just like a browser. Rebindable in the settings.</p>
           </div>
           <div class="card" style="--cardc:var(--tab-magenta)">
             <h3>Tab colors</h3>
@@ -547,9 +536,9 @@
             <h3>Selected-tab border</h3>
             <p>An optional border style highlights the tab you're currently in, using its assigned color — easy to spot in a crowded tab strip.</p>
           </div>
-          <div class="card" style="--cardc:var(--tab-orange)">
-            <h3>Close all tabs</h3>
-            <p>Clear the whole tab strip in one command when you want a clean slate. Your saved tabs stay saved.</p>
+          <div class="card" style="--cardc:var(--tab-magenta)">
+            <h3>Control Menu</h3>
+            <p>One dockable panel for every saved tab — drag to reorder, edit colors, open, close or remove.</p>
           </div>
           <div class="card" style="--cardc:var(--tab-green)">
             <h3>Content Browser integration</h3>
@@ -560,12 +549,6 @@
             <p>Optionally force new asset editors to open as tabs in the main window instead of separate floating windows (UE 5.2+).</p>
           </div>
         </div>
-
-        <h3 style="margin-top:34px">Tab colors in action</h3>
-         <figure class="media">
-             <img src="images/ColorTab_GIF.gif" alt="" loading="lazy" decoding="async">
-          <figcaption>Colors persist per asset — close and reopen, the color comes back.</figcaption>
-        </figure>
       </div>
     </div>
   </section>
@@ -671,7 +654,7 @@
     }
   }
   window.addEventListener('hashchange', function(){ handleHash(true); });
-  activate('auto-restore'); /* default tab on load */
+  activate('reopen-tabs'); /* default tab on load */
   handleHash(false);        /* unless the URL explicitly targets another panel */
 })();
 
