@@ -21,7 +21,8 @@
 <meta name="description" content="Tab Assist is an Unreal Engine editor plugin that lets you save asset editor tabs, reopen closed tabs with Ctrl+Shift+T, and color-code your workspace.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
   :root{
     --bg:#17181C;
@@ -72,9 +73,11 @@
   /* ============ TOP NAV (styled like an editor menu bar) ============ */
   header.menubar{
     position:sticky;top:0;z-index:50;
-    background:rgba(23,24,28,.92);
-    backdrop-filter:blur(8px);
+    background:var(--bg);
     border-bottom:1px solid var(--line-soft);
+  }
+  @media (min-width:721px){
+    header.menubar{background:rgba(23,24,28,.92);backdrop-filter:blur(8px)}
   }
   .menubar-inner{
     max-width:1040px;margin:0 auto;padding:0 24px;
@@ -233,7 +236,7 @@
     background:var(--bg);border:1px dashed var(--line);
     border-radius:6px;overflow:hidden;margin-top:6px;
   }
-  .media img,.media video{display:block;width:100%;height:auto}
+  .media img,.media video{display:block;width:100%;height:auto;aspect-ratio:auto 16/9;background:var(--panel-2)}
   .media .placeholder{
     aspect-ratio:16/9;display:flex;flex-direction:column;
     align-items:center;justify-content:center;gap:8px;
@@ -395,7 +398,7 @@
             <h3>Launch — your tabs are already open</h3>
             <p>On startup, Tab Assist reopens each saved asset editor as a tab in the main window. Assigned tab colors are reapplied at the same time, so the strip looks identical to your last session.</p>
             <figure class="media">
-              <img src="images/OpenEditor_GIF.gif" alt="">
+              <img src="images/OpenEditor_GIF.gif" alt="" loading="lazy" decoding="async">
               <figcaption>Editor start: saved tabs reopen on their own, colors included.</figcaption>
             </figure>
           </div>
@@ -417,7 +420,7 @@
             <p>Right-click any open tab. Tab Assist extends the tab's context menu with a save option — click it and that asset is added to your saved list. The same menu lets you <strong>remove</strong> a tab from the saved list later.</p>
           </div>
           <figure class="media">
-            <img src="images/SaveTab_GIF.gif" alt="Right-clicking an asset editor tab in Unreal Engine and choosing the Tab Assist save option from the context menu">
+            <img src="images/SaveTab_GIF.gif" alt="Right-clicking an asset editor tab in Unreal Engine and choosing the Tab Assist save option from the context menu" loading="lazy" decoding="async">
             <figcaption>The tab's right-click menu is extended with save / remove actions.</figcaption>
           </figure>
         </div>
@@ -429,7 +432,7 @@
             <p>Setting up a work session? Use <strong>Save All Opened Tabs</strong> from the Tab Assist menu in the editor's menu bar to store everything that's currently open in one action.</p>
           </div>
           <figure class="media">
-             <img src="images/SaveAllTabs_GIF.gif" alt="">
+             <img src="images/SaveAllTabs_GIF.gif" alt="" loading="lazy" decoding="async">
             <figcaption>One click stores every currently open asset editor tab.</figcaption>
           </figure>
         </div>
@@ -441,7 +444,7 @@
             <p>Your saved tabs are listed in the Tab Assist menu — click one to reopen just that asset, or open <strong>all stored tabs</strong> in a single action. With restore enabled in the settings, saved tabs come back automatically when the editor starts.</p>
           </div>
           <figure class="media">
-             <img src="images/OpenTab_GIF.gif" alt="">
+             <img src="images/OpenTab_GIF.gif" alt="" loading="lazy" decoding="async">
             <figcaption>Save all open tabs with one click of a button</figcaption>
           </figure>
         </div>
@@ -534,7 +537,7 @@
 
         <h3 style="margin-top:34px">Tab colors in action</h3>
          <figure class="media">
-             <img src="images/ColorTab_GIF.gif" alt="">
+             <img src="images/ColorTab_GIF.gif" alt="" loading="lazy" decoding="async">
           <figcaption>Colors persist per asset — close and reopen, the color comes back.</figcaption>
         </figure>
       </div>
