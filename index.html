@@ -193,7 +193,7 @@
   }
   @keyframes hintbob{
     0%,100%{transform:translateX(0)}
-    50%{transform:translateX(-3px)}
+    50%{transform:translateX(3px)}
   }
   .tabrow-wrap{position:relative}
   .tabgroup .tabrow{
@@ -419,7 +419,7 @@
   <!-- ================= WORKFLOWS (tabbed: restore / reopen / save / control menu) ================= -->
   <section id="workflows">
     <div class="wrap tabgroup">
-      <p class="tabhint"><span class="hintarrow" aria-hidden="true">◀</span> Slide to the right to see more</p>
+      <p class="tabhint"><span class="hintarrow" aria-hidden="true">▶</span> Slide to the right to see more</p>
       <div class="tabrow-wrap">
         <div class="tabrow" role="tablist" aria-label="Tab Assist workflows">
           <button class="docktab" role="tab" aria-controls="auto-restore" aria-selected="true" style="--secc:var(--tab-cyan)">
@@ -698,9 +698,21 @@
 
   function activate(id){
     panels.forEach(function(p){ p.hidden = (p.id !== id); });
+    var selected = null;
     tabs.forEach(function(t){
-      t.setAttribute('aria-selected', t.getAttribute('aria-controls') === id ? 'true' : 'false');
+      var isSel = t.getAttribute('aria-controls') === id;
+      t.setAttribute('aria-selected', isSel ? 'true' : 'false');
+      if(isSel) selected = t;
     });
+    /* keep the selected tab visible in the scrollable row —
+       scroll only the row itself, never the page */
+    if(selected){
+      var r = selected.parentNode; /* .tabrow (position:relative) */
+      var target = selected.offsetLeft - (r.clientWidth - selected.offsetWidth) / 2;
+      target = Math.max(0, Math.min(target, r.scrollWidth - r.clientWidth));
+      if(r.scrollTo){ r.scrollTo({left: target, behavior: 'smooth'}); }
+      else { r.scrollLeft = target; }
+    }
   }
 
   var group = document.querySelector('.tabgroup');
@@ -765,7 +777,7 @@
     swipe = null;
     if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5) return; /* too short or mostly vertical */
     var idx = currentIndex();
-    goTo(dx < 0 ? idx + 1 : idx - 1, 'swipe');
+    goTo(dx > 0 ? idx + 1 : idx - 1, 'swipe'); /* slide right = next, matching the hint */
   }, {passive:true});
   group.addEventListener('touchcancel', function(){ swipe = null; }, {passive:true});
 
