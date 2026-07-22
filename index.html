@@ -193,7 +193,7 @@
   }
   @keyframes hintbob{
     0%,100%{transform:translateX(0)}
-    50%{transform:translateX(3px)}
+    50%{transform:translateX(-3px)}
   }
   .tabrow-wrap{position:relative}
   .tabgroup .tabrow{
@@ -419,7 +419,7 @@
   <!-- ================= WORKFLOWS (tabbed: restore / reopen / save / control menu) ================= -->
   <section id="workflows">
     <div class="wrap tabgroup">
-      <p class="tabhint"><span class="hintarrow" aria-hidden="true">▶</span> Click the tab to the right to see more</p>
+      <p class="tabhint"><span class="hintarrow" aria-hidden="true">◀</span> Slide to the left to see more</p>
       <div class="tabrow-wrap">
         <div class="tabrow" role="tablist" aria-label="Tab Assist workflows">
           <button class="docktab" role="tab" aria-controls="auto-restore" aria-selected="true" style="--secc:var(--tab-cyan)">
@@ -734,6 +734,40 @@
     window.addEventListener('resize', updateFade);
     updateFade();
   }
+
+  /* Swipe the panel itself to change tabs (touch devices).
+     Ignores swipes that start inside the Control Menu drag demo,
+     and only fires when the gesture is clearly horizontal. */
+  var order = tabs.map(function(t){ return t.getAttribute('aria-controls'); });
+  function currentIndex(){
+    for(var i=0;i<panels.length;i++){ if(!panels[i].hidden) return order.indexOf(panels[i].id); }
+    return 0;
+  }
+  function goTo(idx, method){
+    if(idx < 0 || idx >= order.length) return;
+    markTouched();
+    activate(order[idx]);
+    if(typeof gtag === 'function'){
+      gtag('event', 'workflow_tab_click', {tab_id: order[idx], method: method || 'swipe'});
+    }
+  }
+  var swipe = null;
+  group.addEventListener('touchstart', function(e){
+    if(e.target.closest('.ctrlmenu') || e.target.closest('.tabrow')) { swipe = null; return; }
+    var t = e.touches[0];
+    swipe = {x: t.clientX, y: t.clientY};
+  }, {passive:true});
+  group.addEventListener('touchend', function(e){
+    if(!swipe) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - swipe.x;
+    var dy = t.clientY - swipe.y;
+    swipe = null;
+    if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5) return; /* too short or mostly vertical */
+    var idx = currentIndex();
+    goTo(dx < 0 ? idx + 1 : idx - 1, 'swipe');
+  }, {passive:true});
+  group.addEventListener('touchcancel', function(){ swipe = null; }, {passive:true});
 
   function handleHash(scroll){
     var id = location.hash.replace('#','');
