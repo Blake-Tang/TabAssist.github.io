@@ -861,6 +861,23 @@
 
   restoreOrder();
 })();
+
+/* Track every "Get on Fab" click as a named GA4 event.
+   Links open in a new tab, so no need to delay navigation. */
+(function(){
+  var fabLinks = document.querySelectorAll('a[href*="fab.com"]');
+  fabLinks.forEach(function(a){
+    a.addEventListener('click', function(){
+      if(typeof gtag === 'function'){
+        var loc = 'other';
+        if(a.closest('header')) loc = 'nav';
+        else if(a.closest('.hero')) loc = 'hero';
+        else if(a.closest('#install')) loc = 'install';
+        gtag('event', 'fab_link_click', {link_location: loc});
+      }
+    });
+  });
+})();
 </script>
 </body>
 </html>
