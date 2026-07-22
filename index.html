@@ -104,6 +104,30 @@
     color:#1A1206;background:var(--tab-orange);font-weight:500;flex:none;
   }
   nav.mainnav a.nav-cta:hover{background:#F2984F;color:#1A1206}
+  .salebadge{
+    font-family:var(--mono);font-size:11px;font-weight:500;
+    letter-spacing:.08em;text-transform:uppercase;
+    color:var(--tab-yellow);border:1px solid var(--tab-yellow);
+    border-radius:4px;padding:3px 0;flex:none;
+    max-width:168px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 10px,#000 calc(100% - 10px),transparent);
+    mask-image:linear-gradient(to right,transparent,#000 10px,#000 calc(100% - 10px),transparent);
+  }
+  .salebadge .marqtrack{
+    display:inline-flex;white-space:nowrap;
+    animation:salemarq 9s linear infinite;
+  }
+  .salebadge .marqtrack > span{padding-right:18px}
+  @keyframes salemarq{
+    from{transform:translateX(0)}
+    to{transform:translateX(-50%)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .salebadge{max-width:none;padding:3px 8px;-webkit-mask-image:none;mask-image:none}
+    .salebadge .marqtrack > span:last-child{display:none}
+    .salebadge .marqtrack > span{padding-right:0}
+  }
+  @media (max-width:480px){ .salebadge{max-width:120px;font-size:10px} }
   @media (max-width:900px){ nav.mainnav a:nth-child(n+3):not(.nav-cta){display:none} }
   @media (max-width:720px){
     nav.mainnav a:not(.nav-cta){display:none}
@@ -371,6 +395,7 @@
     <nav class="mainnav" aria-label="Site">
       <a href="#features">Features</a>
       <a href="#settings">Settings</a>
+      <span class="salebadge" role="status" aria-label="70 percent off, limited time"><span class="marqtrack" aria-hidden="true"><span>70% off — limited time</span><span>70% off — limited time</span></span></span>
       <a class="nav-cta" href="https://www.fab.com/listings/6d7c9d2c-0318-4bbc-afa9-b38c42638400" target="_blank" rel="noopener">Get on Fab</a>
     </nav>
   </div>
