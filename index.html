@@ -777,7 +777,7 @@
     swipe = null;
     if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5) return; /* too short or mostly vertical */
     var idx = currentIndex();
-    goTo(dx > 0 ? idx + 1 : idx - 1, 'swipe'); /* slide right = next, matching the hint */
+    goTo(dx < 0 ? idx + 1 : idx - 1, 'swipe'); /* Instagram-style: swipe left = next */
   }, {passive:true});
   group.addEventListener('touchcancel', function(){ swipe = null; }, {passive:true});
 
